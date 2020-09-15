@@ -5,11 +5,11 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include/)
 
-add_executable(Pacman src/gui/main.cpp include/moveable.h)
+add_executable(Pacman src/gui/main.cpp include/movable.h include/gui/colors.h src/gui/game_board.cpp include/gui/game_board.h src/movable.cpp include/gui/paintable.h)
 
 include(FindPkgConfig)
-pkg_search_module(SDL2 REQUIRED)
+pkg_search_module(SDL2 REQUIRED sdl2)
+pkg_search_module(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
-include_directories(${SDL2_INCLUDE_DIRS})
-
-target_link_libraries(Pacman ${SDL2_LIBRARIES})
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
+target_link_libraries(Pacman ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
