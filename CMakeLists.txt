@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include/)
 
-add_executable(Pacman src/main.cpp)
+add_executable(Pacman src/gui/main.cpp include/moveable.h)
 
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED)
