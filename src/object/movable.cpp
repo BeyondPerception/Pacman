@@ -40,9 +40,9 @@ void Movable::move(Direction dir) {
 		case RIGHT:
 			if (x + TEXTURE_SIZE / 4 <= bounds.x + bounds.w) {
 				setX(x + TEXTURE_SIZE / 4);
-				x_bounds = true;
-			} else {
 				x_bounds = false;
+			} else {
+				x_bounds = true;
 			}
 			break;
 	}
