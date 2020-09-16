@@ -16,6 +16,10 @@ public:
 	Paintable(SDL_Renderer* renderer, const std::string& path, int x, int y);
 
 	void paint();
+
+	[[nodiscard]] int getX() const;
+
+	[[nodiscard]] int getY() const;
 };
 
 #endif //PACMAN_PAINTABLE_H

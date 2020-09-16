@@ -18,3 +18,10 @@ void Paintable::paint() {
 	SDL_RenderCopy(renderer, texture, nullptr, &pos);
 }
 
+int Paintable::getX() const {
+	return x;
+}
+
+int Paintable::getY() const {
+	return y;
+}
