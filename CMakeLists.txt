@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include/)
 
-add_executable(Pacman src/gui/main.cpp include/movable.h include/gui/colors.h src/gui/game_board.cpp include/gui/game_board.h src/movable.cpp include/object/paintable.h assets/pacman.png src/object/paintable.cpp)
+add_executable(Pacman src/gui/main.cpp include/object/movable.h include/gui/colors.h src/gui/game_board.cpp include/gui/game_board.h src/object/movable.cpp include/object/paintable.h assets/pacman.png src/object/paintable.cpp)
 
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)

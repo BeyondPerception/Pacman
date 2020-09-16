@@ -14,12 +14,10 @@ class Movable : public Paintable {
 	Direction lastDirection;
 	SDL_Rect bounds;
 
+	bool x_bounds;
+	bool y_bounds;
 public:
-	Movable(SDL_Renderer* renderer, const std::string& path, int x, int y, SDL_Rect bounds) : Paintable(renderer, path,
-																										x, y) {
-		this->bounds = bounds;
-		lastDirection = RIGHT;
-	}
+	Movable(SDL_Renderer* renderer, const std::string& path, int x, int y, SDL_Rect bounds);
 
 	void move(Direction dir);
 
@@ -28,6 +26,10 @@ public:
 	void setY(int y);
 
 	void setXY(int x, int y);
+
+	bool isAtXBounds() const;
+
+	bool isAtYBounds() const;
 };
 
 #endif //PACMAN_MOVABLE_H
