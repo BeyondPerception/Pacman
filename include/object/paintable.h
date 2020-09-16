@@ -18,12 +18,17 @@ protected:
 	// DO NOT CHANGE THESE VALUES MANUALLY.
 	int x;
 	int y;
+
+	inline bool containsPoint(int x1, int y1) const;
+
 public:
 	Paintable(SDL_Renderer* renderer, const std::string& path, int x, int y);
 
 	void paint();
 
 	void unpaint();
+
+	bool intersects(Paintable o);
 
 	[[nodiscard]] int getX() const;
 

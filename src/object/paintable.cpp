@@ -37,3 +37,13 @@ int Paintable::getX() const {
 int Paintable::getY() const {
 	return y;
 }
+
+bool Paintable::intersects(Paintable o) {
+	return containsPoint(o.getX(), o.getY()) || containsPoint(o.getX() + TEXTURE_SIZE, o.getY()) ||
+		   containsPoint(o.getX(), o.getY() + TEXTURE_SIZE) ||
+		   containsPoint(o.getX() + TEXTURE_SIZE, o.getY() + TEXTURE_SIZE);
+}
+
+inline bool Paintable::containsPoint(int x1, int y1) const {
+	return x <= x1 && x + TEXTURE_SIZE >= x1 && y <= y1 && y + TEXTURE_SIZE >= y1;
+}
