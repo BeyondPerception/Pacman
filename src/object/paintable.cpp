@@ -6,15 +6,22 @@ Paintable::Paintable(SDL_Renderer* renderer, const std::string& path, int x, int
 		std::cout << "Failed to load image path: " << path << "! Error: " << SDL_GetError() << "\n";
 		exit(1);
 	}
+	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+
+	if (w != TEXTURE_SIZE && h != TEXTURE_SIZE) {
+		std::cout << "Loaded texture with invalid size. Must be " << TEXTURE_SIZE << "x" << TEXTURE_SIZE << "\n";
+		exit(1);
+	}
+
 	this->renderer = renderer;
 	this->x = x;
 	this->y = y;
+
+	paint();
 }
 
-
 void Paintable::paint() {
-	SDL_Rect pos = {.x=x, .y=y};
-	SDL_QueryTexture(texture, nullptr, nullptr, &pos.w, &pos.h);
+	SDL_Rect pos = {.x=x, .y=y, .w=w, .h=h};
 	SDL_RenderCopy(renderer, texture, nullptr, &pos);
 }
 
