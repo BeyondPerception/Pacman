@@ -57,6 +57,7 @@ void Movable::setY(int y) {
 }
 
 void Movable::setXY(int x, int y) {
+	unpaint();
 	this->x = x;
 	this->y = y;
 	paint();
