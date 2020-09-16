@@ -25,6 +25,11 @@ void Paintable::paint() {
 	SDL_RenderCopy(renderer, texture, nullptr, &pos);
 }
 
+void Paintable::unpaint() {
+	SDL_Rect pos = {.x=x, .y=y, .w=w, .h=h};
+	SDL_RenderFillRect(renderer, &pos);
+}
+
 int Paintable::getX() const {
 	return x;
 }

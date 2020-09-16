@@ -23,6 +23,8 @@ public:
 
 	void paint();
 
+	void unpaint();
+
 	[[nodiscard]] int getX() const;
 
 	[[nodiscard]] int getY() const;
