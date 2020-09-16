@@ -69,3 +69,7 @@ bool Movable::isAtXBounds() const {
 bool Movable::isAtYBounds() const {
 	return y_bounds;
 }
+
+Direction Movable::getLastDirection() {
+	return lastDirection;
+}

@@ -30,6 +30,8 @@ public:
 	bool isAtXBounds() const;
 
 	bool isAtYBounds() const;
+
+	Direction getLastDirection();
 };
 
 #endif //PACMAN_MOVABLE_H
