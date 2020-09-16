@@ -1,4 +1,4 @@
-#include <movable.h>
+#include <object/movable.h>
 
 void Movable::move(Direction dir) {
 	lastDirection = dir;
