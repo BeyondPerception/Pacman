@@ -1,5 +1,7 @@
-#ifndef PACMAN_MOVEABLE_H
-#define PACMAN_MOVEABLE_H
+#ifndef PACMAN_MOVABLE_H
+#define PACMAN_MOVABLE_H
+
+#include <object/paintable.h>
 
 enum Direction {
 	UP,
@@ -8,26 +10,24 @@ enum Direction {
 	RIGHT
 };
 
-class Movable {
-	int x;
-	int y;
+class Movable : public Paintable {
+	Direction lastDirection;
+	SDL_Rect bounds;
 
 public:
-	Movable(int x, int y) {
-		this.x = x;
-		this.y = y;
+	Movable(SDL_Renderer* renderer, const std::string& path, int x, int y, SDL_Rect bounds) : Paintable(renderer, path,
+																										x, y) {
+		this->bounds = bounds;
+		lastDirection = RIGHT;
 	}
 
-	virtual void move(Direction dir) = 0;
+	void move(Direction dir);
 
-	[[nodiscard]] int getX() const {
-		return x;
-	}
+	void setX(int x);
 
-	[[nodiscard]] int getY() const {
-		return y;
-	}
+	void setY(int y);
 
+	void setXY(int x, int y);
 };
 
-#endif //PACMAN_MOVEABLE_H
+#endif //PACMAN_MOVABLE_H
