@@ -67,7 +67,6 @@ int main() {
 				quit = true;
 				continue;
 			} else if (curEvent.type == SDL_KEYDOWN) {
-				pacman.move(DOWN);
 				SDL_Keycode keycode = curEvent.key.keysym.sym;
 				switch (keycode) {
 					case SDLK_UP:
