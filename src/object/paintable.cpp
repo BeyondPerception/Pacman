@@ -44,6 +44,10 @@ int Paintable::getY() const {
 }
 
 bool Paintable::intersects(Paintable o) {
+	if (!visible || !o.isVisible()) {
+		return false;
+	}
+
 	return containsPoint(o.getX(), o.getY()) || containsPoint(o.getX() + TEXTURE_SIZE, o.getY()) ||
 		   containsPoint(o.getX(), o.getY() + TEXTURE_SIZE) ||
 		   containsPoint(o.getX() + TEXTURE_SIZE, o.getY() + TEXTURE_SIZE);
