@@ -2,13 +2,13 @@
 
 Movable::Movable(SDL_Renderer* renderer, const std::string& path, int x, int y, SDL_Rect bounds) : Paintable(renderer,
 																											 path,
-																											 x, y) {
+																											 x, y,
+																											 true) {
 	this->bounds = bounds;
 	lastDirection = RIGHT;
 	x_bounds = false;
 	y_bounds = false;
 }
-
 
 void Movable::move(Direction dir) {
 	lastDirection = dir;
@@ -22,7 +22,7 @@ void Movable::move(Direction dir) {
 			}
 			break;
 		case DOWN:
-			if (y + TEXTURE_SIZE / 4 <= bounds.y + bounds.h) {
+			if (y + TEXTURE_SIZE / 4 <= bounds.y + bounds.h - TEXTURE_SIZE) {
 				setY(y + TEXTURE_SIZE / 4);
 				y_bounds = false;
 			} else {
@@ -38,7 +38,7 @@ void Movable::move(Direction dir) {
 			}
 			break;
 		case RIGHT:
-			if (x + TEXTURE_SIZE / 4 <= bounds.x + bounds.w) {
+			if (x + TEXTURE_SIZE / 4 <= bounds.x + bounds.w - TEXTURE_SIZE) {
 				setX(x + TEXTURE_SIZE / 4);
 				x_bounds = false;
 			} else {

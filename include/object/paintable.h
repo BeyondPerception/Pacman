@@ -19,10 +19,12 @@ protected:
 	int x;
 	int y;
 
-	inline bool containsPoint(int x1, int y1) const;
+	bool visible;
+
+	[[nodiscard]] inline bool containsPoint(int x1, int y1) const;
 
 public:
-	Paintable(SDL_Renderer* renderer, const std::string& path, int x, int y);
+	Paintable(SDL_Renderer* renderer, const std::string& path, int x, int y, bool visible=false);
 
 	void paint();
 
@@ -33,6 +35,8 @@ public:
 	[[nodiscard]] int getX() const;
 
 	[[nodiscard]] int getY() const;
+
+	[[nodiscard]] bool isVisible() const;
 };
 
 #endif //PACMAN_PAINTABLE_H

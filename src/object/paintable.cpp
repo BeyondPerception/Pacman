@@ -1,6 +1,6 @@
 #include <object/paintable.h>
 
-Paintable::Paintable(SDL_Renderer* renderer, const std::string& path, int x, int y) {
+Paintable::Paintable(SDL_Renderer* renderer, const std::string& path, int x, int y, bool visible) {
 	texture = IMG_LoadTexture(renderer, path.c_str());
 	if (texture == nullptr) {
 		std::cout << "Failed to load image path: " << path << "! Error: " << SDL_GetError() << "\n";
@@ -16,18 +16,23 @@ Paintable::Paintable(SDL_Renderer* renderer, const std::string& path, int x, int
 	this->renderer = renderer;
 	this->x = x;
 	this->y = y;
+	this->visible = visible;
 
-	paint();
+	if (visible) {
+		paint();
+	}
 }
 
 void Paintable::paint() {
 	SDL_Rect pos = {.x=x, .y=y, .w=w, .h=h};
 	SDL_RenderCopy(renderer, texture, nullptr, &pos);
+	visible = true;
 }
 
 void Paintable::unpaint() {
 	SDL_Rect pos = {.x=x, .y=y, .w=w, .h=h};
 	SDL_RenderFillRect(renderer, &pos);
+	visible = false;
 }
 
 int Paintable::getX() const {
@@ -46,4 +51,8 @@ bool Paintable::intersects(Paintable o) {
 
 inline bool Paintable::containsPoint(int x1, int y1) const {
 	return x <= x1 && x + TEXTURE_SIZE >= x1 && y <= y1 && y + TEXTURE_SIZE >= y1;
+}
+
+bool Paintable::isVisible() const {
+	return visible;
 }
