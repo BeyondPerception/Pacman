@@ -71,6 +71,10 @@ bool Movable::isAtYBounds() const {
 	return y_bounds;
 }
 
+void Movable::setDirection(Direction dir) {
+	lastDirection = dir;
+}
+
 Direction Movable::getLastDirection() {
 	return lastDirection;
 }

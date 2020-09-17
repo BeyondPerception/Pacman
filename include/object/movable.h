@@ -31,6 +31,8 @@ public:
 
 	bool isAtYBounds() const;
 
+	void setDirection(Direction dir);
+
 	Direction getLastDirection();
 };
 
