@@ -49,12 +49,10 @@ int main() {
 	}
 	SDL_SetRenderDrawColor(renderer, COLOR_BACKGROUND >> 16 & 0xFF, COLOR_BACKGROUND >> 8 & 0xFF,
 						   COLOR_BACKGROUND & 0xFF, 0xFF);
-
+	SDL_RenderFillRect(renderer, nullptr);
 	Movable pacman(renderer, "../assets/pacman_small.png", 0, 10, SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	SDL_Event curEvent;
-
-	std::this_thread::sleep_for(5s);
 
 	// so this is our event loop that will update the screen, move the ghosts, handle keyboard events, etc.
 	// Hopefully we can make it relatively short and abstract most of the code elsewhere
@@ -62,31 +60,41 @@ int main() {
 	while (!quit) {
 		SDL_RenderPresent(renderer);
 
-		if (pacman.isAtXBounds()) {
-			if (pacman.getLastDirection() == LEFT) {
-				pacman.move(RIGHT);
-			} else {
-				pacman.move(LEFT);
-			}
-		} else {
-			pacman.move(pacman.getLastDirection());
-		}
-		printf("x: %d y: %d\n", pacman.getX(), pacman.getY());
-
 		// PollEvent puts the next event into curEvent
 		while (SDL_PollEvent(&curEvent) != 0) {
 			// Handle quit events so we can actually close the window without SIGTERM/SIGABRT
 			if (curEvent.type == SDL_QUIT) {
 				quit = true;
 				continue;
+			} else if (curEvent.type == SDL_KEYDOWN) {
+				pacman.move(DOWN);
+				SDL_Keycode keycode = curEvent.key.keysym.sym;
+				switch (keycode) {
+					case SDLK_UP:
+						pacman.setDirection(UP);
+						break;
+					case SDLK_DOWN:
+						pacman.setDirection(DOWN);
+						break;
+					case SDLK_LEFT:
+						pacman.setDirection(LEFT);
+						break;
+					case SDLK_RIGHT:
+						pacman.setDirection(RIGHT);
+						break;
+					default:
+						break;
+				}
 			}
 		}
+
+		pacman.move(pacman.getLastDirection());
 
 		// slow the loop speed to something like 30fps (idk i'm bad at math, you should probably check this)
 		std::this_thread::sleep_for(33ms);
 	}
 
-	// Cleanup
+// Cleanup
 	cleanup(window);
 	return 0;
 }
