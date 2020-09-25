@@ -1,4 +1,6 @@
 #include <SDL.h>
+#include <SDL_image.h>
+
 #include <iostream>
 #include <thread>
 #include <gui/colors.h>
@@ -54,7 +56,6 @@ int main() {
 	Movable pacman(renderer, "../assets/pacman_small.png", 0, 10, SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	GameBoard gameBoard(renderer, SCREEN_HEIGHT / TEXTURE_SIZE, SCREEN_WIDTH / TEXTURE_SIZE);
-	// gameBoard.placeWall(20, 20);
 	gameBoard.generate();
 
 	SDL_Event curEvent;
@@ -62,7 +63,7 @@ int main() {
 	// so this is our event loop that will update the screen, move the ghosts, handle keyboard events, etc.
 	// Hopefully we can make it relatively short and abstract most of the code elsewhere
 	bool quit = false;
-//	while (!quit) {
+	while (!quit) {
 		SDL_RenderPresent(renderer);
 
 		// PollEvent puts the next event into curEvent
@@ -98,8 +99,8 @@ int main() {
 
 		// slow the loop speed to something like 30fps (idk i'm bad at math, you should probably check this)
 		std::this_thread::sleep_for(33ms);
-//	}
-    while (true) {}
+	}
+
 // Cleanup
 	cleanup(window);
 	return 0;

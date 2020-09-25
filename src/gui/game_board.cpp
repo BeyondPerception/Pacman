@@ -5,8 +5,6 @@ GameBoard::GameBoard(SDL_Renderer* renderer, unsigned char rows, unsigned char c
 	this->renderer = renderer;
 	this->rows = rows;
 	this->cols = cols;
-
-	mat = new Paintable* [rows * cols];
 }
 
 void GameBoard::try_gen(std::vector<std::vector<bool> >& grid) {
@@ -157,13 +155,12 @@ bool GameBoard::bad(std::vector<std::vector<bool> >& grid) {
 void GameBoard::generate() {
     precompute1();
     precompute2();
-    std::vector<std::vector<bool> > grid(rows, std::vector<bool>(cols, false)); // grid[x][y] = true IFF there is a wall at (x, y)
-
+    std::vector<std::vector<bool> > grid(rows, std::vector<bool>(cols,false)); // grid[x][y] = true IFF there is a wall at (x, y)
     try_gen(grid);
     bad(grid);
     do {
         try_gen(grid);
-    } while(bad(grid));
+    } while (bad(grid));
 
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
