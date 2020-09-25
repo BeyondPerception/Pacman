@@ -16,25 +16,26 @@ struct Point {
 };
 
 struct Chunk {
-    std::vector<std::vector<bool> > c;
-    int hash;
-    Chunk(std::vector<std::vector<bool> > cc) {
-        c = std::vector<std::vector<bool> >(3, std::vector<bool>(3));
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                c[i][j] = cc[i][j];
-                if (c[i][j]) hash = hash * 10 + i * 9 + j;
-            }
-        }
-    }
+	std::vector<std::vector<bool> > c;
+	int hash;
 
-    Chunk() {
-        c = std::vector<std::vector<bool> >(3, std::vector<bool>(3));
-    }
+	Chunk(std::vector<std::vector<bool> > cc) {
+		c = std::vector<std::vector<bool> >(3, std::vector<bool>(3));
+		for (int i = 0; i < 3; ++i) {
+			for (int j = 0; j < 3; ++j) {
+				c[i][j] = cc[i][j];
+				if (c[i][j]) hash = hash * 10 + i * 9 + j;
+			}
+		}
+	}
 
-    bool operator==(const Chunk& p) const {
-        return hash == p.hash;
-    }
+	Chunk() {
+		c = std::vector<std::vector<bool> >(3, std::vector<bool>(3));
+	}
+
+	bool operator==(const Chunk& p) const {
+		return hash == p.hash;
+	}
 };
 
 namespace std {
@@ -47,9 +48,9 @@ namespace std {
 
 	template<>
 	struct hash<Chunk> {
-	    size_t operator()(const Chunk& p) const {
-	        return p.hash;
-	    }
+		size_t operator()(const Chunk& p) const {
+			return p.hash;
+		}
 	};
 }
 
@@ -65,6 +66,25 @@ class GameBoard {
 	std::unordered_map<Point, Paintable*> objects;
 
 	SDL_Renderer* renderer;
+
+	std::vector<std::vector<bool> > unflatten(std::vector<bool>& c);
+
+	void fact(std::vector<bool>& c, int x);
+
+	void precompute1();
+
+	bool left(Chunk a, Chunk b);
+
+	bool up(Chunk a, Chunk b);
+
+	void precompute2();
+
+	int conv(int x, int y);
+
+	void try_gen(std::vector<std::vector<bool> >& grid);
+
+	bool bad(std::vector<std::vector<bool> >& grid);
+
 public:
 	GameBoard(SDL_Renderer* renderer, unsigned char rows, unsigned char cols);
 
@@ -73,25 +93,7 @@ public:
 	void placeWall(unsigned char row, unsigned char col);
 
 	void clearWall(unsigned char row, unsigned char col);
-
-    std::vector<std::vector<bool> > unflatten(std::vector<bool>& c);
-
-    void fact(std::vector<bool>& c, int x);
-
-	void precompute1();
-
-	bool left(Chunk a, Chunk b);
-
-    bool up(Chunk a, Chunk b);
-
-	void precompute2();
-
-    int conv(int x, int y);
-
-    void try_gen(std::vector<std::vector<bool> >& grid);
-
-    bool bad(std::vector<std::vector<bool> >& grid);
-
+	
 	Paintable** operator[](int index) {
 		return &mat[index * cols];
 	}
