@@ -55,7 +55,7 @@ int main() {
 	// This creates pacman
 	Movable pacman(renderer, "../assets/pacman_small.png", 0, 10, SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
 
-	GameBoard gameBoard(renderer, SCREEN_HEIGHT / TEXTURE_SIZE, SCREEN_WIDTH / TEXTURE_SIZE);
+	GameBoard gameBoard(renderer, SCREEN_WIDTH / TEXTURE_SIZE, SCREEN_HEIGHT / TEXTURE_SIZE);
 	gameBoard.generate();
 
 	SDL_Event curEvent;
