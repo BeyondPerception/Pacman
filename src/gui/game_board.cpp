@@ -148,7 +148,7 @@ bool GameBoard::bad(std::vector<std::vector<bool> >& grid) {
 
         }
     }
-    std::cout << d.numsets << std::endl;
+//    std::cout << d.numsets << std::endl;
     return d.numsets > 1;
 }
 
@@ -161,14 +161,13 @@ void GameBoard::generate() {
     do {
         try_gen(grid);
     } while (bad(grid));
-
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            if (grid[i][j]) {
-                placeWall(i, j);
-            }
-        }
-    }
+//    for (int i = 0; i < rows; ++i) {
+//        for (int j = 0; j < cols; ++j) {
+//            if (grid[i][j]) {
+//                placeWall(i, j);
+//            }
+//        }
+//    }
 }
 
 void GameBoard::placeWall(unsigned char row, unsigned char col) {
