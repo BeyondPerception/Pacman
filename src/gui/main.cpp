@@ -53,7 +53,7 @@ int main() {
 						   COLOR_BACKGROUND & 0xFF, 0xFF);
 	SDL_RenderFillRect(renderer, nullptr);
 	// This creates pacman
-	Movable pacman(renderer, "../assets/pacman_small.png", 0, 10, SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
+	Movable pacman(renderer, "../assets/pacman_small.png", 16, 16, SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	GameBoard gameBoard(renderer, SCREEN_WIDTH / TEXTURE_SIZE, SCREEN_HEIGHT / TEXTURE_SIZE);
 	gameBoard.generate();
