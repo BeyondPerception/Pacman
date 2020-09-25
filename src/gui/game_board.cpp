@@ -47,7 +47,7 @@ void GameBoard::try_gen(std::vector<std::vector<bool> >& grid) {
     }
 }
 
-std::vector<std::vector<bool> > GameBoard::unflatten(std::vector<bool>& c) {
+static std::vector<std::vector<bool> > unflatten(std::vector<bool>& c) {
     std::vector<std::vector<bool> > op(3, std::vector<bool>(3));
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
@@ -77,12 +77,12 @@ void GameBoard::precompute1() {
     fact(base, 0);
 }
 
-bool GameBoard::left(Chunk a, Chunk b) {
+static bool left(Chunk a, Chunk b) {
     if (a.c[1][2] == b.c[1][0] && !a.c[1][2]) return true;
     return false;
 }
 
-bool GameBoard::up(Chunk a, Chunk b) {
+static bool up(Chunk a, Chunk b) {
     if (a.c[2][1] == b.c[0][1] && !a.c[2][1]) return true;
     return false;
 }
@@ -103,41 +103,41 @@ void GameBoard::precompute2() {
 }
 
 struct DSU {
-    int SZ, numsets;
-    std::vector<int> par, siz;
+	int SZ, numsets;
+	std::vector<int> par, siz;
 
-    DSU(int n) {
-        SZ = n;
-        numsets = n;
-        par = std::vector<int>(n);
-        std::iota(par.begin(), par.end(), 0);
-        siz = std::vector<int>(n, 1);
-    }
+	explicit DSU(int n) {
+		SZ = n;
+		numsets = n;
+		par = std::vector<int>(n);
+		std::iota(par.begin(), par.end(), 0);
+		siz = std::vector<int>(n, 1);
+	}
 
-    int find(int x) {
-        return par[x] == x ? x : par[x] = find(par[x]);
-    }
+	int find(int x) {
+		return par[x] == x ? x : par[x] = find(par[x]);
+	}
 
-    bool same(int x, int y) {
-        return find(x) == find(y);
-    }
+	bool same(int x, int y) {
+		return find(x) == find(y);
+	}
 
-    void merge(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return;
-        --numsets;
-        if (siz[x] < siz[y]) {
-            siz[y] += siz[x];
-            par[x] = y;
-        } else {
-            siz[x] += siz[y];
-            par[y] = x;
-        }
-    }
+	void merge(int x, int y) {
+		x = find(x), y = find(y);
+		if (x == y) return;
+		--numsets;
+		if (siz[x] < siz[y]) {
+			siz[y] += siz[x];
+			par[x] = y;
+		} else {
+			siz[x] += siz[y];
+			par[y] = x;
+		}
+	}
 };
 
-int GameBoard::conv(int x, int y) {
-    return x * cols + y;
+inline int GameBoard::conv(int x, int y) const {
+	return x * cols + y;
 }
 
 bool GameBoard::bad(std::vector<std::vector<bool> >& grid) {
