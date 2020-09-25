@@ -2,9 +2,11 @@
 #include <numeric>
 
 GameBoard::GameBoard(SDL_Renderer* renderer, unsigned char rows, unsigned char cols) {
-	this->renderer = renderer;
-	this->rows = rows;
-	this->cols = cols;
+    this->renderer = renderer;
+    this->rows = rows;
+    this->cols = cols;
+
+    mat = new Paintable* [rows * cols];
 }
 
 void GameBoard::try_gen(std::vector<std::vector<bool> >& grid) {
@@ -18,17 +20,30 @@ void GameBoard::try_gen(std::vector<std::vector<bool> >& grid) {
         for (int j = 0; j < cols; j += 3) {
             while (true) {
                 int cur = std::rand() % (int) h.size();
-                if ((j == 0 || adjLeft[pseudo[i/3][j/3-1]].find(h[cur]) != adjLeft[pseudo[i/3][j/3-1]].end()) && (i == 0 || adjUp[pseudo[i/3-1][j/3]].find(h[cur]) != adjUp[pseudo[i/3-1][j/3]].end())) {
+                if ((int) adjUp[h[cur]].size() == 0 || (int) adjLeft[h[cur]].size() == 0) {
+                    continue;
+                }
+                if ((j == 0 ||
+                     adjLeft[pseudo[i / 3][j / 3 - 1]].find(h[cur]) != adjLeft[pseudo[i / 3][j / 3 - 1]].end()) &&
+                    (i == 0 || adjUp[pseudo[i / 3 - 1][j / 3]].find(h[cur]) != adjUp[pseudo[i / 3 - 1][j / 3]].end())) {
                     for (int x = i; x < i + 3; ++x) {
                         for (int y = j; y < j + 3; ++y) {
-                            grid[x][y] = h[cur].c[x-i][y-j];
+                            grid[x][y] = h[cur].c[x - i][y - j];
                         }
                     }
-                    pseudo[i/3][j/3] = h[cur];
+                    pseudo[i / 3][j / 3] = h[cur];
                     break;
                 }
             }
         }
+    }
+    for (int i = 0; i < rows; ++i) {
+        placeWall(i, 0);
+        placeWall(i, cols - 1);
+    }
+    for (int i = 1; i < cols - 1; ++i) {
+        placeWall(0, i);
+        placeWall(rows - 1, i);
     }
 }
 
@@ -46,9 +61,8 @@ void GameBoard::fact(std::vector<bool>& c, int x) {
     if (x == 9) {
         Chunk cur(unflatten(c));
         h.push_back(cur);
-    }
-    else {
-        if (std::rand() % 3 == 0) {
+    } else {
+        if (x != 4) {
             c[x] = true;
             fact(c, x + 1);
         }
@@ -64,16 +78,12 @@ void GameBoard::precompute1() {
 }
 
 bool GameBoard::left(Chunk a, Chunk b) {
-    for (int i = 0; i < 3; ++i) {
-        if (a.c[i][2] == b.c[i][0] && !a.c[i][2]) return true;
-    }
+    if (a.c[1][2] == b.c[1][0] && !a.c[1][2]) return true;
     return false;
 }
 
 bool GameBoard::up(Chunk a, Chunk b) {
-    for (int i = 0; i < 3; ++i) {
-        if (a.c[2][i] == b.c[0][i] && !a.c[2][i]) return true;
-    }
+    if (a.c[2][1] == b.c[0][1] && !a.c[2][1]) return true;
     return false;
 }
 
@@ -84,11 +94,9 @@ void GameBoard::precompute2() {
         for (Chunk j : h) {
             if (left(i, j)) {
                 adjLeft[i].insert(j);
-                adjLeft[j].insert(i);
             }
             if (up(i, j)) {
                 adjUp[i].insert(j);
-                adjUp[j].insert(i);
             }
         }
     }
@@ -121,8 +129,7 @@ struct DSU {
         if (siz[x] < siz[y]) {
             siz[y] += siz[x];
             par[x] = y;
-        }
-        else {
+        } else {
             siz[x] += siz[y];
             par[y] = x;
         }
@@ -148,38 +155,37 @@ bool GameBoard::bad(std::vector<std::vector<bool> >& grid) {
 
         }
     }
-//    std::cout << d.numsets << std::endl;
-    return d.numsets > 1;
+    return d.numsets > 10;
 }
 
 void GameBoard::generate() {
     precompute1();
     precompute2();
-    std::vector<std::vector<bool> > grid(rows, std::vector<bool>(cols,false)); // grid[x][y] = true IFF there is a wall at (x, y)
-    try_gen(grid);
-    bad(grid);
+    std::vector<std::vector<bool> > grid(rows, std::vector<bool>(cols,
+                                                                 false)); // grid[x][y] = true IFF there is a wall at (x, y)
     do {
         try_gen(grid);
     } while (bad(grid));
-//    for (int i = 0; i < rows; ++i) {
-//        for (int j = 0; j < cols; ++j) {
-//            if (grid[i][j]) {
-//                placeWall(i, j);
-//            }
-//        }
-//    }
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (grid[i][j]) {
+                placeWall(i, j);
+            }
+        }
+    }
 }
 
 void GameBoard::placeWall(unsigned char row, unsigned char col) {
-	auto* wall = new Paintable(renderer, "../assets/wall.png", row * TEXTURE_SIZE, col * TEXTURE_SIZE, true);
-	objects[{row, col}] = wall;
-	mat[row * cols + col] = wall;
+    auto* wall = new Paintable(renderer, "../assets/wall.png", row * TEXTURE_SIZE, col * TEXTURE_SIZE, true);
+    objects[{row, col}] = wall;
+    mat[row * cols + col] = wall;
 }
 
 void GameBoard::clearWall(unsigned char row, unsigned char col) {
-	Paintable* wall = objects[{row, col}];
-	wall->unpaint();
-	objects.erase({row, col});
-	mat[row * cols + col] = nullptr;
-	delete wall;
+    Paintable* wall = objects[{row, col}];
+    wall->unpaint();
+    objects.erase({row, col});
+    mat[row * cols + col] = nullptr;
+    delete wall;
 }
