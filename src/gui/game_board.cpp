@@ -36,7 +36,7 @@ void GameBoard::try_gen(std::vector<std::vector<bool> >& grid) {
 	}
 }
 
-std::vector<std::vector<bool> > GameBoard::unflatten(std::vector<bool>& c) {
+static std::vector<std::vector<bool> > unflatten(std::vector<bool>& c) {
 	std::vector<std::vector<bool> > op(3, std::vector<bool>(3));
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
@@ -66,14 +66,14 @@ void GameBoard::precompute1() {
 	fact(base, 0);
 }
 
-bool GameBoard::left(Chunk a, Chunk b) {
+static bool left(Chunk a, Chunk b) {
 	for (int i = 0; i < 3; ++i) {
 		if (a.c[i][2] == b.c[i][0] && !a.c[i][2]) return true;
 	}
 	return false;
 }
 
-bool GameBoard::up(Chunk a, Chunk b) {
+static bool up(Chunk a, Chunk b) {
 	for (int i = 0; i < 3; ++i) {
 		if (a.c[2][i] == b.c[0][i] && !a.c[2][i]) return true;
 	}
@@ -83,8 +83,8 @@ bool GameBoard::up(Chunk a, Chunk b) {
 void GameBoard::precompute2() {
 	adjUp = std::unordered_map<Chunk, std::unordered_set<Chunk> >();
 	adjLeft = std::unordered_map<Chunk, std::unordered_set<Chunk> >();
-	for (Chunk i : h) {
-		for (Chunk j : h) {
+	for (const Chunk& i : h) {
+		for (const Chunk& j : h) {
 			if (left(i, j)) {
 				adjLeft[i].insert(j);
 				adjLeft[j].insert(i);
@@ -101,7 +101,7 @@ struct DSU {
 	int SZ, numsets;
 	std::vector<int> par, siz;
 
-	DSU(int n) {
+	explicit DSU(int n) {
 		SZ = n;
 		numsets = n;
 		par = std::vector<int>(n);
@@ -131,7 +131,7 @@ struct DSU {
 	}
 };
 
-int GameBoard::conv(int x, int y) {
+inline int GameBoard::conv(int x, int y) const {
 	return x * cols + y;
 }
 

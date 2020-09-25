@@ -67,19 +67,13 @@ class GameBoard {
 
 	SDL_Renderer* renderer;
 
-	std::vector<std::vector<bool> > unflatten(std::vector<bool>& c);
-
 	void fact(std::vector<bool>& c, int x);
 
 	void precompute1();
 
-	bool left(Chunk a, Chunk b);
-
-	bool up(Chunk a, Chunk b);
-
 	void precompute2();
 
-	int conv(int x, int y);
+	inline int conv(int x, int y) const;
 
 	void try_gen(std::vector<std::vector<bool> >& grid);
 
@@ -93,7 +87,7 @@ public:
 	void placeWall(unsigned char row, unsigned char col);
 
 	void clearWall(unsigned char row, unsigned char col);
-	
+
 	Paintable** operator[](int index) {
 		return &mat[index * cols];
 	}
