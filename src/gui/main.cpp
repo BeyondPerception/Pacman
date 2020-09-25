@@ -4,6 +4,7 @@
 #include <thread>
 #include <gui/colors.h>
 #include <object/movable.h>
+#include <gui/game_board.h>
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 720;
@@ -50,7 +51,12 @@ int main() {
 	SDL_SetRenderDrawColor(renderer, COLOR_BACKGROUND >> 16 & 0xFF, COLOR_BACKGROUND >> 8 & 0xFF,
 						   COLOR_BACKGROUND & 0xFF, 0xFF);
 	SDL_RenderFillRect(renderer, nullptr);
+	// This creates pacman
 	Movable pacman(renderer, "../assets/pacman_small.png", 0, 10, SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
+
+	GameBoard gameBoard(renderer, SCREEN_HEIGHT / TEXTURE_SIZE, SCREEN_WIDTH / TEXTURE_SIZE);
+	gameBoard.placeWall(20, 20);
+	gameBoard.generate();
 
 	SDL_Event curEvent;
 
@@ -67,6 +73,7 @@ int main() {
 				quit = true;
 				continue;
 			} else if (curEvent.type == SDL_KEYDOWN) {
+				// Handle keyboard input
 				SDL_Keycode keycode = curEvent.key.keysym.sym;
 				switch (keycode) {
 					case SDLK_UP:
@@ -87,6 +94,7 @@ int main() {
 			}
 		}
 
+		// Keep moving pacman forward if the user has not changed dirs.
 		pacman.move(pacman.getLastDirection());
 
 		// slow the loop speed to something like 30fps (idk i'm bad at math, you should probably check this)
