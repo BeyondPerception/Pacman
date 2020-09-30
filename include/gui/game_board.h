@@ -7,11 +7,11 @@
 #include <object/paintable.h>
 
 struct Point {
-	unsigned char x;
-	unsigned char y;
+	unsigned char r;
+	unsigned char c;
 
 	bool operator==(const Point& p) const {
-		return x == p.x && y == p.y;
+		return r == p.r && c == p.c;
 	}
 };
 
@@ -42,7 +42,7 @@ namespace std {
 	template<>
 	struct hash<Point> {
 		size_t operator()(const Point& p) const {
-			return p.x << 0x8 | p.y;
+			return p.r << 0x8 | p.c;
 		}
 	};
 
@@ -87,6 +87,16 @@ public:
 	void placeWall(unsigned char row, unsigned char col);
 
 	void clearWall(unsigned char row, unsigned char col);
+
+	Point getPos(unsigned int pxRow, unsigned int pxCol);
+
+	unsigned char getRows() const {
+		return rows;
+	}
+
+	unsigned char getCols() const {
+		return cols;
+	}
 
 	Paintable** operator[](int index) {
 		return &mat[index * cols];
