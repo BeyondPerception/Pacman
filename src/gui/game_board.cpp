@@ -7,6 +7,8 @@ GameBoard::GameBoard(SDL_Renderer* renderer, unsigned char rows, unsigned char c
 	this->cols = cols;
 
 	mat = new Paintable* [rows * cols];
+
+	std::fill(mat, mat + rows * cols, nullptr);
 }
 
 void GameBoard::try_gen(std::vector<std::vector<bool> >& grid) {
@@ -177,7 +179,7 @@ void GameBoard::generate() {
 }
 
 void GameBoard::placeWall(unsigned char row, unsigned char col) {
-	auto* wall = new Paintable(renderer, "../assets/wall.png", row * TEXTURE_SIZE, col * TEXTURE_SIZE, true);
+	auto* wall = new Paintable(renderer, "../assets/wall.png", col * TEXTURE_SIZE, row * TEXTURE_SIZE, true);
 	objects[{row, col}] = wall;
 	mat[row * cols + col] = wall;
 }
@@ -188,4 +190,8 @@ void GameBoard::clearWall(unsigned char row, unsigned char col) {
 	objects.erase({row, col});
 	mat[row * cols + col] = nullptr;
 	delete wall;
+}
+
+Point GameBoard::getPos(unsigned int pxRow, unsigned int pxCol) {
+	return {static_cast<unsigned char>(std::floor(pxRow / 16)), static_cast<unsigned char>(std::floor(pxCol / 16))};
 }
