@@ -1,5 +1,6 @@
 #include <gui/game_board.h>
 #include <numeric>
+#include <queue>
 
 GameBoard::GameBoard(SDL_Renderer* renderer, unsigned char rows, unsigned char cols) {
 	this->renderer = renderer;
@@ -7,6 +8,13 @@ GameBoard::GameBoard(SDL_Renderer* renderer, unsigned char rows, unsigned char c
 	this->cols = cols;
 
 	mat = new Paintable* [rows * cols];
+	pacman = new Movable(renderer, "../assets/pacman_small.png", TEXTURE_SIZE, TEXTURE_SIZE, SDL_Rect{0, 0, 1056, 720});
+
+	for (int i = 0; i < 2; i++) {
+		ghosts.push_back(
+				new Movable(renderer, "../assets/ghost" + std::to_string(i) + ".png", (i == 0) ? rows * TEXTURE_SIZE : TEXTURE_SIZE,
+							(i == 0) ? TEXTURE_SIZE : cols * TEXTURE_SIZE, SDL_Rect{0, 0, 1056, 720}));
+	}
 
 	std::fill(mat, mat + rows * cols, nullptr);
 }
@@ -193,5 +201,42 @@ void GameBoard::clearWall(unsigned char row, unsigned char col) {
 }
 
 Point GameBoard::getPos(unsigned int pxRow, unsigned int pxCol) {
-	return {static_cast<unsigned char>(std::floor(pxRow / 16)), static_cast<unsigned char>(std::floor(pxCol / 16))};
+	return {static_cast<unsigned char>(std::floor(pxRow / TEXTURE_SIZE)), static_cast<unsigned char>(std::floor(pxCol / TEXTURE_SIZE))};
+}
+
+void move_ghost(Movable* ghost) {
+
+}
+
+void GameBoard::update(SDL_Keycode* code) {
+	if (code != nullptr) {
+		lastKeyPressed = code;
+	}
+
+	for (auto& ghost : ghosts) {
+		move_ghost(ghost);
+	}
+
+	if (pacman->getX() % TEXTURE_SIZE == 0 && pacman->getY() % TEXTURE_SIZE == 0 && lastKeyPressed != nullptr) {
+		switch (*lastKeyPressed) {
+			case SDLK_UP:
+				pacman->setDirection(UP);
+				break;
+			case SDLK_DOWN:
+				pacman->setDirection(DOWN);
+				break;
+			case SDLK_LEFT:
+				pacman->setDirection(LEFT);
+				break;
+			case SDLK_RIGHT:
+				pacman->setDirection(RIGHT);
+				break;
+			default:
+				break;
+
+				lastKeyPressed = nullptr;
+		}
+
+		pacman->move(pacman->getLastDirection());
+	}
 }

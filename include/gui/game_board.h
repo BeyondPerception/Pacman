@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <object/paintable.h>
+#include <object/movable.h>
+#include <queue>
 
 struct Point {
 	unsigned char r;
@@ -67,6 +69,14 @@ class GameBoard {
 
 	SDL_Renderer* renderer;
 
+	std::vector<Movable*> ghosts;
+
+	Movable* pacman;
+
+	SDL_Keycode* lastKeyPressed;
+
+	void move_ghost(Movable* ghost);
+
 	void fact(std::vector<bool>& c, int x);
 
 	void precompute1();
@@ -87,6 +97,8 @@ public:
 	void placeWall(unsigned char row, unsigned char col);
 
 	void clearWall(unsigned char row, unsigned char col);
+
+	void update(SDL_Keycode* code);
 
 	Point getPos(unsigned int pxRow, unsigned int pxCol);
 
