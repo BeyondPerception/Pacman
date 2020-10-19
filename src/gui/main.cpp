@@ -7,8 +7,8 @@
 #include <object/movable.h>
 #include <gui/game_board.h>
 
-const int SCREEN_WIDTH = 1056;
-const int SCREEN_HEIGHT = 720;
+const int SCREEN_WIDTH = 480;
+const int SCREEN_HEIGHT = 480;
 
 SDL_Window* init() {
 	// Initialize SDL2
@@ -65,7 +65,7 @@ int main() {
 	while (!quit) {
 		SDL_RenderPresent(renderer);
 
-		SDL_Keycode* keycode = nullptr;
+		SDL_Keycode keycode = -1;
 
 		// PollEvent puts the next event into curEvent
 		while (SDL_PollEvent(&curEvent) != 0) {
@@ -74,15 +74,16 @@ int main() {
 				quit = true;
 				continue;
 			} else if (curEvent.type == SDL_KEYDOWN) {
-				// Handle keyboard input
-				keycode = &curEvent.key.keysym.sym;
+				keycode = curEvent.key.keysym.sym;
 			}
 		}
 
 		gameBoard.update(keycode);
 
+//		Point p = {static_cast<unsigned char>(gameBoard.pacman->getY() / TEXTURE_SIZE),
+//				   static_cast<unsigned char>(gameBoard.pacman->getX() / TEXTURE_SIZE)};
 //		std::cout << (int) p.r << " " << (int) p.c << "\n";
-
+//
 //		for (int i = 0; i < gameBoard.getRows(); i++) {
 //			for (int j = 0; j < gameBoard.getCols(); j++) {
 //				if (p.r == i && p.c == j) {
@@ -98,7 +99,7 @@ int main() {
 //		std::cout << "\n";
 
 		// slow the loop speed to something like 30fps (idk i'm bad at math, you should probably check this)
-		std::this_thread::sleep_for(33ms);
+		std::this_thread::sleep_for(100ms);
 	}
 
 	// Cleanup
