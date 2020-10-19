@@ -1,6 +1,9 @@
 #ifndef PACMAN_GAME_BOARD_H
 #define PACMAN_GAME_BOARD_H
 
+#pragma GCC optimize ("Ofast")
+#pragma GCC target ("sse4")
+
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -66,22 +69,29 @@ class GameBoard {
 
 	Paintable** mat;
 	std::unordered_map<Point, Paintable*> objects;
+	std::vector<std::vector<bool>> grid2;
+	int cost[30][30][30][30];
+
+	std::vector<std::vector<bool>> cheese;
+	int points;
 
 	SDL_Renderer* renderer;
 
 	std::vector<Movable*> ghosts;
 
-	Movable* pacman;
+	SDL_Keycode lastKeyPressed;
 
-	SDL_Keycode* lastKeyPressed;
-
-	void move_ghost(Movable* ghost);
+	void move_ghost(Movable* ghost, int r, int c);
 
 	void fact(std::vector<bool>& c, int x);
 
 	void precompute1();
 
 	void precompute2();
+
+	void calc_cost();
+
+	void game_over();
 
 	inline int conv(int x, int y) const;
 
@@ -90,15 +100,21 @@ class GameBoard {
 	bool bad(std::vector<std::vector<bool> >& grid);
 
 public:
+	Movable* pacman;
+
 	GameBoard(SDL_Renderer* renderer, unsigned char rows, unsigned char cols);
 
 	void generate();
 
 	void placeWall(unsigned char row, unsigned char col);
 
+	void placeCheese(unsigned char row, unsigned char col);
+
 	void clearWall(unsigned char row, unsigned char col);
 
-	void update(SDL_Keycode* code);
+	void clearCheese(unsigned char row, unsigned char col);
+
+	void update(SDL_Keycode code);
 
 	Point getPos(unsigned int pxRow, unsigned int pxCol);
 
